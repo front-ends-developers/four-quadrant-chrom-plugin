@@ -1,0 +1,114 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2343046",
+      "name": "回收站",
+      "font_class": "huishouzhan",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "5626900",
+      "name": "紧急",
+      "font_class": "jinji",
+      "unicode": "e6e4",
+      "unicode_decimal": 59108
+    },
+    {
+      "icon_id": "6311342",
+      "name": "不紧急",
+      "font_class": "quxiaojinji",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "6705900",
+      "name": "紧急",
+      "font_class": "jinji1",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "7226611",
+      "name": "添加",
+      "font_class": "tianjia",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "7814606",
+      "name": "象限图",
+      "font_class": "xiangxiantu",
+      "unicode": "e6c7",
+      "unicode_decimal": 59079
+    },
+    {
+      "icon_id": "9979167",
+      "name": "紧急",
+      "font_class": "jinji2",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "10720073",
+      "name": "紧急",
+      "font_class": "jinji3",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "10807846",
+      "name": "轻度",
+      "font_class": "qingdu",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "10967902",
+      "name": "一般",
+      "font_class": "yiban",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "12194353",
+      "name": "紧急",
+      "font_class": "jinji4",
+      "unicode": "e698",
+      "unicode_decimal": 59032
+    },
+    {
+      "icon_id": "12260225",
+      "name": "删  除",
+      "font_class": "shanchu1-copy",
+      "unicode": "e57d",
+      "unicode_decimal": 58749
+    },
+    {
+      "icon_id": "12624365",
+      "name": "象限散点图 ",
+      "font_class": "xiangxiansandiantu",
+      "unicode": "e6ee",
+      "unicode_decimal": 59118
+    },
+    {
+      "icon_id": "13807876",
+      "name": "回收站",
+      "font_class": "yunpanlogo-",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "16957055",
+      "name": "紧急",
+      "font_class": "jinji-copy",
+      "unicode": "e5cc",
+      "unicode_decimal": 58828
+    }
+  ]
+}
