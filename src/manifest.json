@@ -1,5 +1,5 @@
 {
-  "name": "vue-chrom-plugin",
+  "name": "four-quadrant-chrom-plugin",
   "description": "A Vue.js web extension",
   "version": 1.0,
   "manifest_version": 2,
@@ -10,7 +10,7 @@
   },
   "browser_action": {
     "default_icon": "images/icon38.png",
-    "default_title": "vue-chrom-plugin",
+    "default_title": "four-quadrant-chrom-plugin",
     "default_popup": "popup/popup.html"
   },
   "background": {
@@ -32,6 +32,6 @@
     "http://*/*",
     "https://*/*"
   ],
-  "homepage_url": "https://github.com/front-ends-developers/chrom-plugin-base/tree/open-web",
+  "homepage_url": "https://github.com/front-ends-developers/four-quadrant-chrom-plugin",
   "default_locale": "zh_CN"
 }

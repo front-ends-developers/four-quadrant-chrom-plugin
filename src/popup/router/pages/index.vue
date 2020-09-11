@@ -7,10 +7,20 @@
             <use xlink:href="#icon-xiangxiansandiantu"></use>
           </svg><span class="app-name-txt">象限法则</span>
         </div>
-        <div class="app-recycle" @click="showRecycle">
+        <div class="app-recycle" @click.stop="showRecycle">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-huishouzhan"></use>
           </svg>
+          <div v-if="showRecycleFlag" class="app-recycle-list" v-clickoutside="handleClose">
+            <ul>
+              <li v-for="(item, index) in recycleData" :key="index+'i'">
+                <span :class="['p-l-10 color-909399']">{{item.name}}</span>
+                <svg v-if="item.status" class="icon del-icon" aria-hidden="true" @click.stop="delData(index, item, 'recycleData')">
+                  <use xlink:href="#icon-shanchu1-copy"></use>
+                </svg>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -22,7 +32,7 @@
             <li v-for="(item, index) in importantUrgent" :key="index+'i'">
               <input type="checkbox" name="favorite" :checked="item.status" value="1" @change="changeBox($event, index, item, 'importantUrgent')"/><span :class="['p-l-10' ,item.status? 'color-909399' :'']">{{item.name}}</span>
               <svg v-if="item.status" class="icon del-icon" aria-hidden="true" @click="delBox(index, item, 'importantUrgent')">
-                <use xlink:href="#icon-shanchu1-copy"></use>
+                <use xlink:href="#icon-yunpanlogo-"></use>
               </svg>
             </li>
           </ul>
@@ -35,7 +45,7 @@
             <li v-for="(item, index) in importantNoUrgent" :key="index+'i'">
               <input type="checkbox" name="favorite" :checked="item.status" value="1" @change="changeBox($event, index, item, 'importantNoUrgent')"/><span :class="['p-l-10' ,item.status? 'color-909399' :'']">{{item.name}}</span>
               <svg v-if="item.status" class="icon del-icon" aria-hidden="true" @click="delBox(index, item, 'importantNoUrgent')">
-                <use xlink:href="#icon-shanchu1-copy"></use>
+                <use xlink:href="#icon-yunpanlogo-"></use>
               </svg>
             </li>
           </ul>
@@ -48,7 +58,7 @@
             <li v-for="(item, index) in urgentNoImportant" :key="index+'i'">
               <input type="checkbox" name="favorite" :checked="item.status" value="1" @change="changeBox($event, index, item, 'urgentNoImportant')"/><span :class="['p-l-10' ,item.status? 'color-909399' :'']">{{item.name}}</span>
               <svg v-if="item.status" class="icon del-icon" aria-hidden="true" @click="delBox(index, item, 'urgentNoImportant')">
-                <use xlink:href="#icon-shanchu1-copy"></use>
+                <use xlink:href="#icon-yunpanlogo-"></use>
               </svg>
             </li>
           </ul>
@@ -61,7 +71,7 @@
             <li v-for="(item, index) in noUrgentNoImportant" :key="index+'i'">
               <input type="checkbox" name="favorite" :checked="item.status" value="1" @change="changeBox($event, index, item, 'noUrgentNoImportant')"/><span :class="['p-l-10' ,item.status? 'color-909399' :'']">{{item.name}}</span>
               <svg v-if="item.status" class="icon del-icon" aria-hidden="true" @click="delBox(index, item, 'noUrgentNoImportant')">
-                <use xlink:href="#icon-shanchu1-copy"></use>
+                <use xlink:href="#icon-yunpanlogo-"></use>
               </svg>
             </li>
           </ul>
@@ -110,21 +120,48 @@
 </template>
 <script>
 // import localForage from "localforage";
+const clickoutside = {
+  // 初始化指令
+  bind(el, binding, vnode) {
+    function documentHandler(e) {
+      // 这里判断点击的元素是否是本身，是本身，则返回
+      if (el.contains(e.target)) {
+        return false;
+      }
+      // 判断指令中是否绑定了函数
+      if (binding.expression) {
+        // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
+        binding.value(e);
+      }
+    }
+    // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
+    el.__vueClickOutside__ = documentHandler;
+    document.addEventListener('click', documentHandler);
+  },
+  unbind(el, binding) {
+    // 解除事件监听
+    document.removeEventListener('click', el.__vueClickOutside__);
+    delete el.__vueClickOutside__;
+  },
+};
 export default {
   components: {
   },
+  directives: { clickoutside },
   data() {
       return {
         importantUrgent: [],
         importantNoUrgent: [],
         urgentNoImportant: [],
         noUrgentNoImportant: [],
+        recycleData: [],
         addShow: false,
         formData: {
           name: '',
           type: '',
           status: false, // 1：未完成
-        }
+        },
+        showRecycleFlag: false
       };
   },
   mounted() {
@@ -133,8 +170,29 @@ export default {
     that.getData('importantNoUrgent');
     that.getData('urgentNoImportant');
     that.getData('noUrgentNoImportant');
+    that.getData('recycleData');
   },
   methods: {
+    /**
+     * @description: 关闭回收站
+     * @param {Object} e
+     * @author: 无尘
+     */
+    handleClose(e) {
+      this.showRecycleFlag = false;
+    },
+    /**
+     * @description: 删除数据
+     * @param {Number} index
+     * @param {Object} item
+     * @param {String} type
+     * @author: 无尘
+     */
+    delData(index, item, type) {
+      const that = this;
+      that[type].splice(index, 1);
+      localStorage.setItem(type, JSON.stringify(that[type]));
+    },
     /**
      * @description: 显示回收站
      * @author: 无尘
@@ -154,13 +212,14 @@ export default {
       const that = this;
       // 先添加回收站
       let arr = [];
-      if (localStorage.getItem('recycle')) {
-        arr = JSON.parse(localStorage.getItem('recycle'));
+      if (localStorage.getItem('recycleData')) {
+        arr = JSON.parse(localStorage.getItem('recycleData'));
       }
       arr.push(item);
-      localStorage.setItem('recycle', JSON.stringify(arr));
+      localStorage.setItem('recycleData', JSON.stringify(arr));
       that[type].splice(index, 1);
       localStorage.setItem(type, JSON.stringify(that[type]));
+      that.getData('recycleData');
     },
     /**
      * @description: 勾选完成
@@ -220,6 +279,7 @@ export default {
       that.getData('importantNoUrgent');
       that.getData('urgentNoImportant');
       that.getData('noUrgentNoImportant');
+      that.getData('recycleData');
     },
     /**
      * @description: 关闭添加弹窗
@@ -261,14 +321,34 @@ export default {
       position: absolute;
       top: 10px;
       right: 10px;
+      background: #fff;
       z-index: 1;
       cursor: pointer;
     }
   }
   .app-recycle {
+    position: relative;
     .icon {
       cursor: pointer;
       font-size: 22px;
+    }
+    .app-recycle-list {
+      position: absolute;
+      top: 30px;
+      right: 20px;
+      z-index: 3;
+      width: 200px;
+      min-height: 100px;
+      max-height: 200px;
+      background: #fff;
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+      overflow-x: hidden;
+      overflow-y: auto;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      .del-icon {
+        font-size: 16px;
+      }
     }
   }
   .app-name {
@@ -301,34 +381,6 @@ export default {
         max-width: 230px;
         overflow-x: hidden;
         overflow-y: auto;
-        ul {
-          li {
-            position: relative;
-            width: 100%;
-            padding: 0 10px;
-            box-sizing: border-box;
-            height: 32px;
-            line-height: 32px;
-            font-size: 12px;
-            overflow-x: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            &::after {
-              content: " ";
-              position: absolute;
-              left: 0;
-              bottom: 0;
-              right: 0;
-              height: 1px;
-              border-bottom: 1px solid rgba(0,0,0,0.1);
-              color: rgba(0,0,0,0.1);
-              -webkit-transform-origin: 0 0;
-              transform-origin: 0 0;
-              -webkit-transform: scaleY(0.5);
-              transform: scaleY(0.5);
-            }
-          }
-        }
       }
     }
   }
@@ -343,53 +395,6 @@ export default {
     }
   }
   .add-dialog {
-    .add-mask {
-      position: fixed;
-      z-index: 1000;
-      top: 0;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.6);
-    }
-    .add-dialog-body {
-      position: fixed;
-      z-index: 5000;
-      top: 50%;
-      left: 16px;
-      right: 16px;
-      -webkit-transform: translate(0,-50%);
-      transform: translate(0,-50%);
-      width: 320px;
-      margin: 0 auto;
-      background-color: #fff;
-      text-align: center;
-      border-radius: 12px;
-      overflow: hidden;
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-flex-direction: column;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-      flex-direction: column;
-      max-height: 90%;
-    }
-    .add-dialog-head {
-      padding: 20px;
-    }
-    .add-dialog-content {
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 0 24px;
-      margin-bottom: 32px;
-      font-size: 17px;
-      line-height: 1.4;
-      word-wrap: break-word;
-      -webkit-hyphens: auto;
-      hyphens: auto;
-      color: rgba(0,0,0,0.5);
-    }
     .add-dialog-foot {
       position: relative;
       line-height: 40px;
@@ -411,20 +416,6 @@ export default {
         transform-origin: 0 0;
         -webkit-transform: scaleY(0.5);
         transform: scaleY(0.5);
-      }
-      .add-dialog__btn {
-        display: block;
-        -webkit-box-flex: 1;
-        -webkit-flex: 1;
-        flex: 1;
-        color: #576b95;
-        text-decoration: none;
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-        position: relative;
-        background: #fff;
-        border: none;
-        outline: none;
-        cursor: pointer;
       }
       .add-dialog__btn_default {
         color: #323233;
